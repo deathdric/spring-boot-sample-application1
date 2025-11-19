@@ -1,0 +1,15 @@
+spring:
+  flyway:
+    enabled: true
+# Setting the role option is important : it will impact the ownership of the tables/sequences created
+# during the migration, and the privileges given to them for the read/write and read/only accounts.
+    url: jdbc:postgresql://postgresql:5432/application1?options=-c%20role=application1_dev_adm
+# Use an account with schema owner privileges, which has been granted the role provided above
+    user: svcapplication1admd
+    password: xxxxxxx
+  datasource:
+# Use an account with only read/write permissions for standard operations, following the principle
+# of least privilege
+    url: jdbc:postgresql://postgresql:5432/application1
+    username: svcapplication1rwd
+    password: xxxxxxx
