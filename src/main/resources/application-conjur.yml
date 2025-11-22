@@ -1,0 +1,29 @@
+conjur:
+# this is the name of the 'tenant' configured in your conjur server
+# change the value to the one you setup when installing conjur
+  account: deathshadow
+# conjur API address. TLS is mandatory, so make sure that the certificate used on the remote host is signed
+# with a PKI trusted by your java runtime. It is possible to provide the certificate to trust (conjur.ssl-certificate
+# or conjur.cert-file property), but it's better in the long run to use a trusted PKI.
+  appliance-url: https://conjur:443
+
+# Path to the mapping file between the variable names set in @Value and the real variable names in conjur.
+# I could have left it to the default value (classpath:conjur.properties) but in real life you'll probably want to
+# configure that externally (i.e.: not in the classpath), so better start good habits of configuring it explicitly
+  mapping-path: classpath:conjur-mappings.properties
+
+# You should set the CONJUR_AUTHN_LOGIN environment variable, but if you want to keep in properties you can uncomment
+# the line below and put the value of the conjur username you want to use to fetch credentials.
+#  authn-login: xxxxxx
+
+# You should set the CONJUR_AUTHN_API_KEY environment variable, but if you want to keep in properties you can uncomment
+# the line below and put the value of the conjur API Key you want to use to fetch credentials.
+#  authn-api-key: xxxxxx
+
+# This is a custom section created for the sample in order to avoid hardcoding policies in configuration classes
+# If is not part of the official conjur configuration properties
+credentials:
+  conjur:
+    policy:
+      datasource: app/application1/dev/db-rw
+      flyway: app/application1/dev/db-adm

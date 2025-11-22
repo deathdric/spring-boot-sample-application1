@@ -1,8 +1,7 @@
 plugins {
-	id("java")
-	id("org.springframework.boot") version "3.5.7"
-	id("io.spring.dependency-management") version "1.1.7"
-    id("io.freefair.lombok") version "9.1.0"
+    id 'java'
+    id 'org.springframework.boot' version '3.5.8'
+    id 'io.freefair.lombok' version '9.1.0'
 }
 
 group = 'org.deathdric'
@@ -10,35 +9,58 @@ version = '1.0.0-SNAPSHOT'
 description = 'Application 1'
 
 java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(21)
-	}
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
 }
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
+
+    // BOM in order to avoid dependency versioning hell
+    implementation(platform("org.springframework.boot:spring-boot-dependencies:3.5.8"))
+    implementation(platform("org.springframework.cloud:spring-cloud-dependencies:2025.0.0"))
+
+    /****************************************************************
+     * Conjur-specific dependency
+     *
+     * If you are not planning to use conjur you can remove it along
+     * with the 'conjur' source folder
+     */
+    implementation("com.cyberark:conjur-sdk-springboot:2.2.5") {
+        // conjur starter is built against old versions of spring boot/cloud
+        // better avoid fetching unneeded dependencies
+        exclude group: 'io.github.resilience4j', module: 'resilience4j-springboot2'
+    }
+    /****************************************************************/
+
+
+
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.flywaydb:flyway-core'
     implementation 'org.flywaydb:flyway-database-postgresql'
     implementation 'com.fasterxml.jackson.core:jackson-databind'
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
-	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'org.postgresql:postgresql'
-	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0' // only if you want swagger ui
+
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    runtimeOnly 'org.postgresql:postgresql'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
