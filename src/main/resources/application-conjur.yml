@@ -25,5 +25,5 @@ conjur:
 credentials:
   conjur:
     policy:
-      datasource: app/application1/dev/db-rw
-      flyway: app/application1/dev/db-adm
+      datasource: app/application1/dev/credentials/db-rw
+      flyway: app/application1/dev/credentials/db-adm
