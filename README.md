@@ -52,23 +52,27 @@ http://localhost:8080/api/products
 
 ## About the conjur setup
 
-Explaining the full setup has not its place in this specific repository, however I still need to
+Explaining the full setup has not its place in this specific repository (you can check [this repository](https://github.com/deathdric/infrastructure-setup-scripts)
+for more details), however I still need to
 explain from where the values are set in the configuration files.
 
 I put it place a hierarchical policy setup containing the application name (`application1`)
-and the environment trigram (`dev`). Then I created one policy per account.
+and the environment trigram (`dev`) and a parent policy dedicated to credentials (`credentials`).
+Then I created one policy per account.
 
 ```
 myuser@myhost:~$ conjur list | grep dev
   "deathshadow:policy:app/application1/dev",
-  "deathshadow:policy:app/application1/dev/db-adm",
-  "deathshadow:policy:app/application1/dev/db-rw",
-  "deathshadow:variable:app/application1/dev/db-adm/info",
-  "deathshadow:variable:app/application1/dev/db-adm/login",
-  "deathshadow:variable:app/application1/dev/db-adm/password",
-  "deathshadow:variable:app/application1/dev/db-rw/info",
-  "deathshadow:variable:app/application1/dev/db-rw/login",
-  "deathshadow:variable:app/application1/dev/db-rw/password",
+  "deathshadow:policy:app/application1/dev/credentials",
+  "deathshadow:policy:app/application1/dev/credentials/db-adm",
+  "deathshadow:policy:app/application1/dev/credentials/db-rw",
+  "deathshadow:variable:app/application1/dev/credentials/db-adm/info",
+  "deathshadow:variable:app/application1/dev/credentials/db-adm/login",
+  "deathshadow:variable:app/application1/dev/credentials/db-adm/password",
+  "deathshadow:variable:app/application1/dev/credentials/db-rw/info",
+  "deathshadow:variable:app/application1/dev/credentials/db-rw/login",
+  "deathshadow:variable:app/application1/dev/credentials/db-rw/password",
+
 ```
 
 In theory, I could have put both passwords as variables in the same policy, but that's when
